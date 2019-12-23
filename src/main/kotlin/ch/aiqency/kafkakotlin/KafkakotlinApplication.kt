@@ -43,6 +43,9 @@ fun main(args: Array<String>) {
 	runApplication<KafkakotlinApplication>(*args)
 }
 
+/**
+* Rest that test the communication
+*/
 @RestController
 class Ctrl(val kafkaProducer: MKafkaProducer){
 
@@ -57,12 +60,14 @@ class Ctrl(val kafkaProducer: MKafkaProducer){
 	}
 }
 
+/**
+* Producer related code
+*/
 @Service
 class MKafkaProducer {
 
 	@Value(value = "\${kafka.bootstrapAddress}")
 	lateinit var bootstrapAddress: String
-
 
 	val kafkaProducer: KafkaProducer<String, String> by lazy {
 		val configProps = Properties()
@@ -77,6 +82,9 @@ class MKafkaProducer {
 	}
 }
 
+/**
+* Consumer related code
+*/
 @Service
 class KMafkaConsumer {
 
@@ -84,7 +92,7 @@ class KMafkaConsumer {
 	fun consume(message: String) {
 		System.out.println("Consumed message: " + message);
 	}
-
+	
 }
 
 @EnableKafka
@@ -103,7 +111,6 @@ class KafkaConfiguration {
 		config[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
 		return DefaultKafkaConsumerFactory(config)
 	}
-
 
 	@Bean
 	fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, Any> {
